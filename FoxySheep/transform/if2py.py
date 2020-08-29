@@ -1,10 +1,13 @@
-from itertools import product
+import ast
 import astor
+import astpretty
+import re
+
+from FoxySheep.generated.InputFormVisitor import InputFormVisitor
+from FoxySheep.pymma import GreekSymbols2Unicode
 from antlr4 import TerminalNode
 from antlr4.ParserRuleContext import ParserRuleContext
-from FoxySheep.generated.InputFormVisitor import InputFormVisitor
-import astpretty
-import ast
+from itertools import product
 from typing import List, Union
 
 IF_name_to_pyop = {
@@ -101,55 +104,10 @@ symbol_translate = {
     "E": "math.e",
     "Pi": "math.pi",
     "I": "1j",
-    # FIXME: This isn't quite right. This handles names that are only single greek letters,
-    # and this misses names with the letters embedded. Cross that bridge when we get to it.
-    "\\[Alpha]": "α",
-    "\\[Beta]": "β",
-    "\\[Gamma]": "γ",
-    "\\[Delta]": "δ",
-    "\\[Epsilon]": "ε",
-    "\\[Zeta]": "ζ",
-    "\\[Eta]": "η",
-    "\\[Theta]": "θ",
-    "\\[Iota]": "ι",
-    "\\[Kappa]": "κ",
-    "\\[Lambda]": "λ",
-    "\\[Mu]": "μ",
-    "\\[Nu]": "ν",
-    "\\[Xi]": "ξ",
-    "\\[Omicron]": "ο",
-    "\\[Pi]": "π",
-    "\\[Rho]": "ρ",
-    "\\[Sigma]": "σ",
-    "\\[Tau]": "τ",
-    "\\[Upsilon]": "υ",
-    "\\[Psi]": "φ",
-    "\\[Omega]": "ω",
-
-    "\\[CapitalAlpha]": "Α",
-    "\\[CapitalBeta]": "Β",
-    "\\[CapitalGamma]": "Γ",
-    "\\[CapitalDelta]": "Δ",
-    "\\[CapitalEpsilon]": "Ε",
-    "\\[CapitalZeta]": "Ζ",
-    "\\[CapitalEta]": "Η",
-    "\\[CapitalTheta]": "Θ",
-    "\\[CapitalIota]": "Ι",
-    "\\[CapitalKappa]": "Κ",
-    "\\[CapitalLambda]": "Λ",
-    "\\[CapitalMu]": "Μ",
-    "\\[CapitalNu]": "Ν",
-    "\\[CapitalXi]": "Ξ",
-    "\\[CapitalOmicron]": "Ο",
-    "\\[CapitalPi]": "Π",
-    "\\[CapitalRho]": "Ρ",
-    "\\[CapitalSigma]": "Σ",
-    "\\[CapitalTau]": "Τ",
-    "\\[CapitalUpsilon]": "Υ",
-    "\\[CapitalPsi]": "Φ",
-    "\\[CapitalOmega]": "Χ",
 }
 
+
+# left: Mathematica, right: Python
 add_sub_signum = [ast.Add, ast.Sub]
 
 
@@ -161,6 +119,14 @@ def ast_constant(value, lineno=0, col_offset=0, kind=None):
     node.kind = None
     return node
 
+symbol_replace = dict((re.escape(k), v) for k, v in GreekSymbols2Unicode.items())
+symbol_replace_re = re.compile("|".join(symbol_replace.keys()))
+
+# From:
+# https://stackoverflow.com/questions/6116978/how-to-replace-multiple-substrings-of-a-string
+def replace_symbols_with_unicode(text: str)->str:
+    """Replace symbolic symbol names with their Unicode counterparts"""
+    return symbol_replace_re.sub(lambda m: symbol_replace[re.escape(m.group(0))], text)
 
 class InputForm2PyAst(InputFormVisitor):
     def __init__(self, mode="python"):
@@ -488,6 +454,8 @@ class InputForm2PyAst(InputFormVisitor):
     def visitSymbolLiteral(self, ctx: ParserRuleContext) -> ast.AST:
         symbol_name = ctx.getText()
         symbol_name = symbol_translate.get(symbol_name, symbol_name)
+        if symbol_replace_re.match(symbol_name):
+            symbol_name = replace_symbols_with_unicode(symbol_name)
         return ast.Name(symbol_name, ctx=ast.Load())
 
     def visitTimes(self, ctx: ParserRuleContext) -> ast.AST:
@@ -573,4 +541,7 @@ if __name__ == "__main__":
 
     from FoxySheep.tree.pretty_printer import pretty_print_compact
 
-    print(input_form_to_python("1 + 2 - 3 + 4", parse_tree_fn, pretty_print_compact))
+    print(input_form_to_python("1 + 2 - 3 + 4", parse_tree_fn, "python", pretty_print_compact))
+    for s in ("\\[Alpha]1", "\\[Omega]", "foo"):
+        print(symbol_replace_re.match(s))
+        print(replace_symbols_with_unicode(s))

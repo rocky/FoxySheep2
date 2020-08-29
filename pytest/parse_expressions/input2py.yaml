@@ -81,3 +81,7 @@ Symbol:
       InputForm: x^2 + y^2
       tree: "(<prog:Prog>  (<expr:PlusOp>  (<expr:Power>  (<expr:SymbolLiteral>  (<symbol:ContextName>  x)) '^' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '2'))) '+' (<expr:Power>  (<expr:SymbolLiteral>  (<symbol:ContextName>  y)) '^' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '2')))))"
       python: (x ** 2 + y ** 2)
+
+    # -
+    #   InputForm: Plus[\[Alpha], \[Beta]1]
+    #   python: "(α + β1)"

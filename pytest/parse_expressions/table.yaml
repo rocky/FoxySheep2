@@ -1,0 +1,10 @@
+# This YAML file contains examples from
+# https://reference.wolfram.com/language/ref/Table.html
+Table:
+# This example is in Fast Intro for Programmers
+# -  InputForm: "Table[x^2, {x, 10}]"
+#     tree: "(<prog:Prog>  (<expr:HeadExpression>  (<expr:SymbolLiteral>  (<symbol:ContextName>  Table)) '[' (<expressionList:ExpressionListed>  (<expr:Power>  (<expr:SymbolLiteral>  (<symbol:ContextName>  x)) '^' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '2'))) ',' (<expr:List>  '{' (<expressionList:ExpressionListed>  (<expr:SymbolLiteral>  (<symbol:ContextName>  x)) ',' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '10'))) '}')) ']'))"
+#     python: "[(x ** 2) for x in range(1, 11)]"
+-  InputForm: "Table[GCD[x, 6], {x, 0, 20, 2}]"
+    tree: "(<prog:Prog>  (<expr:HeadExpression>  (<expr:SymbolLiteral>  (<symbol:ContextName>  Table)) '[' (<expressionList:ExpressionListed>  (<expr:HeadExpression>  (<expr:SymbolLiteral>  (<symbol:ContextName>  GCD)) '[' (<expressionList:ExpressionListed>  (<expr:SymbolLiteral>  (<symbol:ContextName>  x)) ',' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '6'))) ']') ',' (<expr:List>  '{' (<expressionList:ExpressionListed>  (<expr:SymbolLiteral>  (<symbol:ContextName>  x)) ',' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '0')) ',' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '20')) ',' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '2'))) '}')) ']'))"
+    python: "[(x ** 2) for x in range(1, 11)]"

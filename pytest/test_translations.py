@@ -46,17 +46,23 @@ def do_test(input_base: str, translation_fn: Callable, test_attr: str):
         print(f'{"*" * 10} {section} {"*" * 10}')
         for test_item in test_list:
             expr = str(test_item["InputForm"])
-            tree_str_expect = test_item["tree"]
-            full_form_expect = str(test_item.get(test_attr, expr))
+            if "tree" in test_item:
+                have_tree = True
+                tree_str_expect = test_item["tree"]
+                full_form_expect = str(test_item.get(test_attr, expr))
+            else:
+                have_tree = False
             s = translation_fn(expr, parse_tree_fn=parse_tree_fn, show_tree_fn=pp_fn)
             if show_tests:
                 print(s)
                 print(full_form_expect)
-                print(last_tree_str)
+                if have_tree:
+                    print(last_tree_str)
                 print("=" * 30)
 
             assert s.replace("\n", "").strip() == full_form_expect
-            assert last_tree_str == tree_str_expect
+            if have_tree:
+                assert last_tree_str == tree_str_expect
 
 
 def test_FullForm():
