@@ -30,7 +30,7 @@ eval_namespace = {
 
 
 def add_imports(optional_imports=[]):
-    for importname in ["decimal", "math"] + optional_imports:
+    for importname in ["decimal", "math", "FoxySheep.mma"] + optional_imports:
         try:
             eval_namespace[importname] = importlib.import_module(importname)
         except ImportError:
@@ -38,6 +38,10 @@ def add_imports(optional_imports=[]):
                 f"Error importing {importname}; translations using this module will fail."
             )
             eval_namespace["missing_modules"].append(importname)
+    from FoxySheep import pymma
+    module_dict = pymma.__dict__
+    to_import = [name for name in module_dict if not name.startswith('_')]
+    eval_namespace.update({name: module_dict[name] for name in to_import})
     return
 
 

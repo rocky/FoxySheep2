@@ -25,11 +25,10 @@ Fast-Intro-for-Programmers:
     tree: "(<prog:Prog>  (<expr:Accessor>  (<expr:List>  '{' (<expressionList:ExpressionListed>  (<expr:SymbolLiteral>  (<symbol:ContextName>  a)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  b)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  c)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  d))) '}') (<accessExpression:AccessExpressionA>  '[' '[' (<expressionList:ExpressionListed>  (<expr:Number>  (<numberLiteral:NumberBaseTen>  '3'))) ']' ']')))"
     python: "[a, b, c, d][2]"
 
-  # FIXME:
-  # -
-  #   InputForm: "{a, b, c, d}[[-3]]"
-  #   tree: "(<prog:Prog>  (<expr:Accessor>  (<expr:List>  '{' (<expressionList:ExpressionListed>  (<expr:SymbolLiteral>  (<symbol:ContextName>  a)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  b)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  c)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  d))) '}') (<accessExpression:AccessExpressionA>  '[' '[' (<expressionList:ExpressionListed>  (<expr:UnaryPlusMinus>  '-' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '3')))) ']' ']')))"
-  #   python: "[a, b, c, d][-3 + 1]"
+  -
+    InputForm: "{a, b, c, d}[[-3]]"
+    tree: "(<prog:Prog>  (<expr:Accessor>  (<expr:List>  '{' (<expressionList:ExpressionListed>  (<expr:SymbolLiteral>  (<symbol:ContextName>  a)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  b)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  c)) ',' (<expr:SymbolLiteral>  (<symbol:ContextName>  d))) '}') (<accessExpression:AccessExpressionA>  '[' '[' (<expressionList:ExpressionListed>  (<expr:UnaryPlusMinus>  '-' (<expr:Number>  (<numberLiteral:NumberBaseTen>  '3')))) ']' ']')))"
+    python: "[a, b, c, d][-3 + 1]"
 
   -
     InputForm: "{a, b, c, d, e, f}[[2 ;; 4]]"

@@ -307,7 +307,12 @@ class InputForm2PyAst(InputFormVisitor):
             value = numeric_literal
             node.value = value
         else:
-            node = self.visit(expressionList.getChild(0))
+            access_expression = expressionList.getChild(0)
+            node = self.visit(access_expression)
+            if hasattr(access_expression, "MINUS") and access_expression.MINUS():
+                # For negative subscript we need to add one to get the
+                # corresponding Python index
+                node = ast.BinOp(node, right=ast_constant(1), op=ast.Add())
 
         return node
 
