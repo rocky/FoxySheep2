@@ -172,7 +172,7 @@ def REPL_file(
 @click.option(
     "-o",
     "--output-style",
-    type=click.Choice(["python", "sympy", "numpy", "fullform"], case_sensitive=False),
+    type=click.Choice(["python", "sympy", "numpy", "scipy", "fullform"], case_sensitive=False),
     required=False,
 )
 @click.option(
@@ -223,9 +223,12 @@ def main(
     output_style_fn = input_form_to_full_form
     mode = output_style.lower() if output_style else None
     optional_imports = []
-    if output_style and mode in ("sympy", "numpy", "python"):
+    if output_style and mode in ("numpy", "python", "scipy", "sympy"):
         if output_style != "python":
-            optional_imports = [output_style]
+            if output_style == "scypi":
+                optional_imports = ["scipy", "scipy.special", "numpy"]
+            else:
+                optional_imports = [output_style]
         output_style_fn = input_form_to_python
         parse_tree_fn = parse_tree_from_string
         if session == None and not expr:

@@ -26,6 +26,7 @@ IF_name_to_pyop = {
 fn_translate_py = {
     "Cosh": "math.cosh",
     "Exp": "math.exp",
+    "Factorial": "math.factorial",
     "GCD": "math.gcd",
     "List": "list",
     "Log": "math.log",
@@ -49,16 +50,27 @@ for arc, tri, h in product(
 
 # left: Mathematica, right: numpy
 fn_translate_numpy = {
-    "Cosh": "numpy.cosh",
-    "Exp": "numpy.exp",
-    "GCD": "numpy.gcd",
-    "Log": "numpy.log",
-    "Mod": "numpy.Mod",
-    "Max": "numpy.Max",
-    "Min": "numpy.Min",
-    "Pochhammer": "numpy.rf",
-    "Sqrt": "numpy.sqrt",
-    "Tanh": "numpy.tanh",
+    **fn_translate_py,
+    **{
+        "Cosh": "numpy.cosh",
+        "Exp": "numpy.exp",
+        "GCD": "numpy.gcd",
+        "Log": "numpy.log",
+        "Mod": "numpy.Mod",
+        "Max": "numpy.Max",
+        "Min": "numpy.Min",
+        "Pochhammer": "numpy.rf",
+        "Sqrt": "numpy.sqrt",
+        "Tanh": "numpy.tanh",
+    }
+}
+
+# left: Mathematica, right: scipy
+fn_translate_scipy = {
+    **fn_translate_py,
+    **{
+        "Factorial": "scipy.special.factorial",
+    }
 }
 
 # trigonometric, etc.
@@ -74,16 +86,21 @@ for arc, tri, h in product(
 
 # left: Mathematica, right: Sympy
 fn_translate_sympy = {
-    "Cosh": "sympy.cosh",
-    "Exp": "sympy.exp",
-    "GCD": "sympy.gcd",
-    "Log": "sympy.log",
-    "Mod": "sympy.Mod",
-    "Max": "sympy.Max",
-    "Min": "sympy.Min",
-    "Pochhammer": "sympy.rf",
-    "Sqrt": "sympy.sqrt",
-    "Tanh": "sympy.tanh",
+    **fn_translate_py,
+    **{
+        "Cosh": "sympy.cosh",
+        "Exp": "sympy.exp",
+        "Factorial": "sympy.factorial",
+        "GCD": "sympy.gcd",
+        "Log": "sympy.log",
+        "Mod": "sympy.Mod",
+        "Max": "sympy.Max",
+        "Min": "sympy.Min",
+        "Pochhammer": "sympy.rf",
+        "PrimeQ": "sympy.isprime",
+        "Sqrt": "sympy.sqrt",
+        "Tanh": "sympy.tanh",
+    }
 }
 
 # trigonometric, e.t.c.
@@ -132,12 +149,14 @@ class InputForm2PyAst(InputFormVisitor):
     def __init__(self, mode="python"):
         if mode == "python":
             self.fn_translate = fn_translate_py
-        elif mode == "sympy":
-            self.fn_translate = fn_translate_sympy
         elif mode == "numpy":
             self.fn_translate = fn_translate_numpy
+        elif mode == "scipy":
+            self.fn_translate = fn_translate_scipy
+        elif mode == "sympy":
+            self.fn_translate = fn_translate_sympy
         else:
-            raise RuntimeError(f"mode should be python, numpy or sympy; got {mode}")
+            raise RuntimeError(f"mode should be python, numpy, scipy or sympy; got {mode}")
 
     def adjust_index(self, ctx, sig_num=0) -> ast.AST:
         """Adjust for origin 0 (Python) vs. origin 1 (Mathematica) indexing"""
@@ -332,8 +351,13 @@ class InputForm2PyAst(InputFormVisitor):
             args.append(self.visit(arg))
         return ast.Call(func=fn_name_node, args=args, keywords=[])
 
-        # return self.make_head(self.get_full_form(ctx.expr()), ctx.expressionList())
-        return None
+    def visitFactorial(self, ctx: ParserRuleContext) -> ast.AST:
+        if "Factorial" in self.fn_translate:
+            fn_name = self.fn_translate["Factorial"]
+            fn_name_node = ast.Name(id=fn_name, ctx=ast.Load())
+            args = [self.visit(ctx.expr())]
+            return ast.Call(func=fn_name_node, args=args, keywords=[])
+        raise RuntimeError
 
     def visitList(self, ctx: ParserRuleContext) -> ast.AST:
         expr_list = []
