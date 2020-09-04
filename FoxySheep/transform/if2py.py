@@ -21,12 +21,24 @@ IF_name_to_pyop = {
     "PlusOpContext": ast.Add,
 }
 
+# left: Mathematica, right: Python, comment: FullForm function
+IF_op_to_pyop = {
+    "==": ast.Eq,  # Equal
+    "!=": ast.NotEq, # Unequal
+    ">": ast.Gt, # Greater
+    "<": ast.Lt, # Less
+    "<=": ast.LtE, # LessEqual
+    ">=": ast.GtE, # GreaterEqual
+}
+
 # FIXME: DRY this
 # left: Mathematica, right: Python
 fn_translate_py = {
+    "Ceiling": "math.ceil",
     "Cosh": "math.cosh",
     "Exp": "math.exp",
     "Factorial": "math.factorial",
+    "Floor": "math.floor",
     "GCD": "math.gcd",
     "List": "list",
     "Log": "math.log",
@@ -52,6 +64,7 @@ for arc, tri, h in product(
 fn_translate_numpy = {
     **fn_translate_py,
     **{
+        "Abs": "numpy.absolute",
         "Cosh": "numpy.cosh",
         "Exp": "numpy.exp",
         "GCD": "numpy.gcd",
@@ -60,7 +73,9 @@ fn_translate_numpy = {
         "Max": "numpy.Max",
         "Min": "numpy.Min",
         "Pochhammer": "numpy.rf",
+        "Sign": "numpy.sign",
         "Sqrt": "numpy.sqrt",
+        "Round": "numpy.round",
         "Tanh": "numpy.tanh",
     }
 }
@@ -75,11 +90,11 @@ fn_translate_scipy = {
 
 # trigonometric, etc.
 for arc, tri, h in product(
-    ("", "Arc"), ("Sin", "Cos", "Tan", "Cot", "Sec", "Csc"), ("", "h")
+    ("", "Arc"), ("Sin", "Cos", "Tan"), ("", "h")
 ):
     fm = arc + tri + h
     if arc:  # arc func
-        fs = "a" + tri.lower() + h
+        fs = "arc" + tri.lower() + h
     else:  # non-arc func
         fs = tri.lower() + h
     fn_translate_numpy.update({fm: "numpy." + fs})
@@ -321,6 +336,8 @@ class InputForm2PyAst(InputFormVisitor):
         assert expressionList.getChildCount() == 1
         numeric_literal = self.get_numeric_literal(expressionList)
         if numeric_literal:
+            # FIXME: if literal value is 0, this should be a the whole list,
+            # e.g. [:].
             numeric_literal.value -= 1
             node = ast.Index()
             value = numeric_literal
@@ -328,12 +345,30 @@ class InputForm2PyAst(InputFormVisitor):
         else:
             access_expression = expressionList.getChild(0)
             node = self.visit(access_expression)
-            if hasattr(access_expression, "MINUS") and access_expression.MINUS():
-                # For negative subscript we need to add one to get the
-                # corresponding Python index
-                node = ast.BinOp(node, right=ast_constant(1), op=ast.Add())
+            # if hasattr(access_expression, "MINUS") and access_expression.MINUS():
+            #     # For negative subscript we need to add one to get the
+            #     # corresponding Python index
+            #     node = ast.BinOp(node, right=ast_constant(1), op=ast.Add())
 
         return node
+
+    def visitComparison(self, ctx: ParserRuleContext) -> ast.AST:
+        """
+        Translates infix compareison operators.
+        """
+        op = IF_op_to_pyop[ctx.getChild(1).getText()]
+        return ast.Compare(left=self.visit(ctx.expr(0)),
+                           ops=[op()],
+                           comparators=[self.visit(ctx.expr(1))]
+        )
+
+    def visitFactorial(self, ctx: ParserRuleContext) -> ast.AST:
+        if "Factorial" in self.fn_translate:
+            fn_name = self.fn_translate["Factorial"]
+            fn_name_node = ast.Name(id=fn_name, ctx=ast.Load())
+            args = [self.visit(ctx.expr())]
+            return ast.Call(func=fn_name_node, args=args, keywords=[])
+        raise RuntimeError
 
     def visitHeadExpression(self, ctx: ParserRuleContext) -> ast.AST:
         "Translates function calls"
@@ -350,38 +385,6 @@ class InputForm2PyAst(InputFormVisitor):
                 continue
             args.append(self.visit(arg))
         return ast.Call(func=fn_name_node, args=args, keywords=[])
-
-    def visitFactorial(self, ctx: ParserRuleContext) -> ast.AST:
-        if "Factorial" in self.fn_translate:
-            fn_name = self.fn_translate["Factorial"]
-            fn_name_node = ast.Name(id=fn_name, ctx=ast.Load())
-            args = [self.visit(ctx.expr())]
-            return ast.Call(func=fn_name_node, args=args, keywords=[])
-        raise RuntimeError
-
-    def visitSet(self, ctx: ParserRuleContext) -> ast.AST:
-        if ctx.EQUAL():
-            # FIXME: should inspect type of ctx.expr()[0] to ensure it is
-            # a SymbolLiteralContext
-            store = ast.Name(id=ctx.expr()[0].getText(), ctx="Store()")
-            value = self.visit(ctx.expr()[1])
-            return ast.Assign(targets=[store], value=value, type_comment=None)
-        elif ctx.CARETEQUAL():
-            raise RuntimeError(
-                "Can't handle ^= yet"
-            )
-        elif ctx.CARETCOLONEQUAL():
-            raise RuntimeError(
-                "Can't handle ^:= yet"
-            )
-        elif ctx.FUNCTIONARROW():
-            raise RuntimeError(
-                "Can't handle -> yet"
-            )
-        else:
-            raise RuntimeError(
-                "Can't handle this kind of Set function"
-            )
 
     def visitList(self, ctx: ParserRuleContext) -> ast.AST:
         expr_list = []
@@ -496,6 +499,30 @@ class InputForm2PyAst(InputFormVisitor):
             upper=self.adjust_index(ctx.getChild(2)),
             step=None,
         )
+
+    def visitSet(self, ctx: ParserRuleContext) -> ast.AST:
+        if ctx.EQUAL():
+            # FIXME: should inspect type of ctx.expr()[0] to ensure it is
+            # a SymbolLiteralContext
+            store = ast.Name(id=ctx.expr()[0].getText(), ctx="Store()")
+            value = self.visit(ctx.expr()[1])
+            return ast.Assign(targets=[store], value=value, type_comment=None)
+        elif ctx.CARETEQUAL():
+            raise RuntimeError(
+                "Can't handle ^= yet"
+            )
+        elif ctx.CARETCOLONEQUAL():
+            raise RuntimeError(
+                "Can't handle ^:= yet"
+            )
+        elif ctx.FUNCTIONARROW():
+            raise RuntimeError(
+                "Can't handle -> yet"
+            )
+        else:
+            raise RuntimeError(
+                "Can't handle this kind of Set function"
+            )
 
     def visitStringLiteral(self, ctx: ParserRuleContext) -> ast.AST:
         val = ctx.getText()

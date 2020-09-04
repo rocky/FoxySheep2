@@ -1,0 +1,5 @@
+# This YAML file numpy-specific translations
+
+  -
+    InputForm: PrimeQ[23]
+    python: sympy.isprime(23)
