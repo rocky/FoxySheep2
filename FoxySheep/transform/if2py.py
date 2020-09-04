@@ -359,6 +359,30 @@ class InputForm2PyAst(InputFormVisitor):
             return ast.Call(func=fn_name_node, args=args, keywords=[])
         raise RuntimeError
 
+    def visitSet(self, ctx: ParserRuleContext) -> ast.AST:
+        if ctx.EQUAL():
+            # FIXME: should inspect type of ctx.expr()[0] to ensure it is
+            # a SymbolLiteralContext
+            store = ast.Name(id=ctx.expr()[0].getText(), ctx="Store()")
+            value = self.visit(ctx.expr()[1])
+            return ast.Assign(targets=[store], value=value, type_comment=None)
+        elif ctx.CARETEQUAL():
+            raise RuntimeError(
+                "Can't handle ^= yet"
+            )
+        elif ctx.CARETCOLONEQUAL():
+            raise RuntimeError(
+                "Can't handle ^:= yet"
+            )
+        elif ctx.FUNCTIONARROW():
+            raise RuntimeError(
+                "Can't handle -> yet"
+            )
+        else:
+            raise RuntimeError(
+                "Can't handle this kind of Set function"
+            )
+
     def visitList(self, ctx: ParserRuleContext) -> ast.AST:
         expr_list = []
         for expr in ctx.expressionList().getChildren():

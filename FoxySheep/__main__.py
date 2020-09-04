@@ -30,7 +30,7 @@ eval_namespace = {
 
 
 def add_imports(optional_imports=[]):
-    for importname in ["decimal", "math", "FoxySheep.mma"] + optional_imports:
+    for importname in ["decimal", "math"] + optional_imports:
         try:
             eval_namespace[importname] = importlib.import_module(importname)
         except ImportError:
@@ -68,10 +68,17 @@ def eval_one(
         traceback.print_exc(5)
         return
 
-    print(results)
     if session:
+        # FIXME: we should get an AST as well as a string. Use the AST
+        # below to determine whether to use eval or exec.
+        print(results)
         try:
             x = eval(results, None, eval_namespace)
+        except SyntaxError:
+            try:
+                exec(results, None, eval_namespace)
+            except:
+                print(sys.exc_info()[1])
         except:
             print(sys.exc_info()[1])
         else:
@@ -81,6 +88,8 @@ def eval_one(
             # pprint(out_results)
             pass
         pass
+    else:
+        print(results)
     return
 
 
