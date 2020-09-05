@@ -1,5 +1,25 @@
 # This YAML file numpy-specific translations
-
-  -
-    InputForm: PrimeQ[23]
-    python: sympy.isprime(23)
+  - 2+3 == 5
+  - 3^7 == 2187
+  - 4! == 24
+  - 5+1.0 == 6
+  - "Sqrt[4] == 2"
+  - "{1,4,9,16}[[3]] == 9"
+  # Trigonometry functions
+  - "Cos[0] == 1.0"
+  - "Sin[0] == 0.0"
+  - "Cos[Pi] == -1.0"
+  - "Sin[Pi/2] == 1.0"
+  - "ArcSin[1]==Pi /2"
+  # Comparisons
+  - "1>2 == False"
+  - "2<1 == False"
+  - "2>2 == False"
+  - "1<2 == True"
+  - "2<=1 == False"
+  - "1>=2 == False"
+  - "2>=2 == True"
+  - "2<=2 == True"
+  - "2<=2 == True"
+  - "2==2 == True"
+  - "2!=2 == False"

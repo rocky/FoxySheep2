@@ -29,7 +29,7 @@ Sqrt[3.0];  (* Sqrt[3.0] * Sqrt[3.0] != 3.0; due to approximate numbers *)
 
 {1,4,9,16}[[3]] == 9;
 
-(* Sine and Cosine *)
+(* Trigonometry functions *)
 Cos[0] == 1.0;
 Sin[0] == 0.0;
 Cos[Pi] == -1.0;
@@ -39,7 +39,7 @@ Cos[Pi/2]; (* != 0 due to appproximate numbers *)
 ArcSin[1]==Pi /2;
 
 (* Comparisons *)
-1>2 == True;
+1>2 == False;
 2<1 == False;
 2>2 == False;
 1<2 == True;
@@ -47,7 +47,8 @@ ArcSin[1]==Pi /2;
 1>=2 == False;
 2>=2 == True;
 2<=2 == True;
-2<=2 == True;
+2==2 == True;
+2!=2 == False;
 
 (* Logical operators
 True && True;

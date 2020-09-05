@@ -9,6 +9,7 @@ matrix:
       dist: bionic
 
 install:
+- pip install numpy
 - pip install -e .
 
 script:
