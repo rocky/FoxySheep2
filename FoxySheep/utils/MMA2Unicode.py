@@ -1,7 +1,7 @@
 
 # Automatically generated from 2unicode.py
 
-MMA2Unicode = {"
+MMA2Unicode = {
 
     "\\[AAcute]": "\u00E1"
     "\\[ABar]": "\u0101"

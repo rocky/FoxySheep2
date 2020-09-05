@@ -1,3 +1,14 @@
+1.2.3 2020-08-03
+================
+
+* Add Comparisions (==, <=, <, >, >=). And this allow us to:
+* Start evaluation testing using numpy mode
+* Add mma examples from mockmma
+* First cut at Set[]
+* Add factorial (!) and "scipy" mode
+* Handle all Greek letters and identifiers with Greek letters
+* Start Mathematica library in Python
+
 1.2.2 2020-08-03
 ================
 

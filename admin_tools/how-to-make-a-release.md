@@ -29,7 +29,7 @@
 
 	$ [[ ! -d /tmp/gittest ]] && mkdir /tmp/gittest; pushd /tmp/gittest
 	$ pyenv local 3.8.4
-	$ pip install -e git://github.com/rocky/FoxySheep.git#egg=FoxySheep
+	$ pip install -e git://github.com/rocky/FoxySheep2.git#egg=FoxySheep
 	$ foxy-sheep --version
 	$ foxy-sheep -e '1+2 3'
 	$ pip uninstall FoxySheep

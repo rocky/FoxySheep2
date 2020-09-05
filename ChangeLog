@@ -1,6 +1,81 @@
+2020-09-05  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/version.py: Get ready for release 1.2.3
+
+2020-09-05  rocky <rb@dustyfeet.com>
+
+	* .travis.yml, pytest/parse_expressions/mockmma.m,
+	pytest/parse_expressions/numpy.yaml, pytest/test_numpy.py: Start
+	testing numpy
+
+2020-09-04  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/transform/if2py.py,
+	pytest/parse_expressions/fi4cpy.yaml,
+	pytest/parse_expressions/mockmma.m,
+	pytest/parse_expressions/numpy.yaml: Add Comparisons and mma
+	examples from mockmma
+
+2020-09-04  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/__main__.py, FoxySheep/transform/if2py.py: First cut at
+	Set[]
+
+2020-09-03  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/__main__.py, FoxySheep/transform/if2py.py: Add factorial
+	and scipy
+
+2020-09-03  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/__main__.py, FoxySheep/transform/if2py.py,
+	pytest/parse_expressions/fi4cpy.yaml: Handle negative
+	AccessExpressionA (subscripts) Need to add 1 to negative subscripts to get corresponding Python
+	(negative) subscript.  __main__.py start importing pymma library
+
+2020-08-29  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/emitter/input_form.py, FoxySheep/pymma.py,
+	FoxySheep/transform/if2py.py,
+	pytest/parse_expressions/SimpleAlgebraicFF.m,
+	pytest/parse_expressions/input2py.yaml,
+	pytest/parse_expressions/table.yaml, pytest/test_if2py.py,
+	pytest/test_translations.py: Handle SymbolLiteral more properly ...  Embedded GreekSymbols now handled inside SymbolLiteral Start
+	mathematica library in Python
+
+2020-08-08  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/transform/if2py.py, FoxySheep/utils/MMA2Unicode.py,
+	resources/2unicode.py: Conver Unicode table into Python dictionary
+
+2020-08-08  R. Bernstein <rocky@users.noreply.github.com>
+
+	* : Merge pull request #3 from rljacobson/FoxySheep2 Added resources/UnicodeLongNames.csv
+
+2020-08-04  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/generated/InputFormLexer.py,
+	FoxySheep/transform/if2py.py, grammar/InputFormLexerRules.g4,
+	pytest/parse_expressions/SO1.m: Greek and other symbols to Python
+	Unicode As always, there is more to do.  In particular for Python we handle
+	only single-letters, not names with embedded greek letters and
+	symbols.
+
+2020-08-04  rocky <rb@dustyfeet.com>
+
+	* FoxySheep/generated/FullFormLexer.py,
+	FoxySheep/generated/FullFormParser.py,
+	FoxySheep/generated/InputFormLexer.py,
+	FoxySheep/generated/InputFormParser.py,
+	grammar/FullFormLexerRules.g4, grammar/InputFormLexerRules.g4,
+	pytest/parse_expressions/SimpleAlgebraic.m,
+	pytest/parse_expressions/SimpleAlgebraicFF.m: Add variant and greek
+	letters
+
 2020-08-03  rocky <rb@dustyfeet.com>
 
-	* FoxySheep/version.py: Get ready for release 1.2.2
+	* ChangeLog, FoxySheep/version.py, NEWS.md: Get ready for release
+	1.2.2
 
 2020-08-03  rocky <rb@dustyfeet.com>
 
