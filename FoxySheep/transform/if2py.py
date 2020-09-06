@@ -68,13 +68,16 @@ fn_translate_numpy = {
         "Cosh": "numpy.cosh",
         "Exp": "numpy.exp",
         "GCD": "numpy.gcd",
+        "Im": "numpy.imag",
+        "LCM": "numpy.lcm",
         "Log": "numpy.log",
-        "Mod": "numpy.Mod",
-        "Max": "numpy.Max",
-        "Min": "numpy.Min",
+        "Mod": "numpy.remainder",
+        # "Max": "numpy.max", - Need to package *args as a list
+        # "Min": "numpy.min", - Need to package *args as a list
         "Pochhammer": "numpy.rf",
         "Sign": "numpy.sign",
         "Sqrt": "numpy.sqrt",
+        "Re": "numpy.real",
         "Round": "numpy.round",
         "Tanh": "numpy.tanh",
     }

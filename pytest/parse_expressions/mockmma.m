@@ -67,6 +67,24 @@ FactorInteger[24]=={{2, 3}, {3, 1}};
 Expand[(1+x)^2]==1+2*x+x^2;
 Factor[x^2+2*x+1]==(x+1)^2;
 
+Abs[1] == 1;
+Abs[-1] == 1;
+Mod[13,3] == 1;
+Mod[27,8] == 3;
+
+Sign[27] == 1;
+Sign[0] == 0;
+Sign[-23] == -1;
+
+GCD[12,18] == 6;
+LCM[12,18] == 36;
+
+Floor[12.5] == 12;
+Ceiling[12.5] == 13;
+
+Re[5+ 7 I] == 5;
+Im[5+ 7 I] == 7;
+
 (* Derivatives and Integration *)
 (*
 D[Log[x],x]==1/x;
@@ -88,24 +106,14 @@ If[True,a,b]==a;
 If[False,a,b]==b;
 If[False,a,b]==b
 
-Abs[1]
-Abs[-1]
-Round[1.1]
-Round[1.6]
-Mod[13,3]
-Mod[27,8]
-Max[27,8]
-Min[27,8]
-Sign[27]
-Sign[0]
-Sign[-23]
-Re[5+ 7 I]
-Im[5+ 7 I]
+Round[1.1] == 1
+Round[1.6] == 2
+
+Max[27,8] == 27;
+Min[27,8] == 8;
+
 Conjugate[5+ 7 I]==5 - 7 I
-Floor[12.5]
-Ceiling[12.5]
-GCD[12,18]
-LCM[12,18]
+
 KroneckerDelta[12,18]
 KroneckerDelta[a,a]
 Table[1,{3}]=={1, 1,1}
