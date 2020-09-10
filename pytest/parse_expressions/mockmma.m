@@ -51,16 +51,16 @@ ArcSin[1]==Pi /2;
 (2!=2) == False;
 
 (* Logical operators
-True && True;
-True && False;
-True || False;
-False || False;
+ (True && True) == True;
+ (True && False) == False;
+ (True || False;) == True;
+ (False || False) == False;
 *)
 
 Log[E] == 1.0;
 
 E==Exp[1] == True;
-I*I;
+I*I == -1;
 
 (* Factoring *)
 FactorInteger[24]=={{2, 3}, {3, 1}};
@@ -100,27 +100,27 @@ The below we haven't gone over
  ******************************************)
 (*
 {a,b}.{c,d}==a*c + b * d;
-{2,3}.{5,3}
+{2,3}.{5,3} == 19;
 
 If[True,a,b]==a;
 If[False,a,b]==b;
-If[False,a,b]==b
+If[False,a,b]==b;
 
-Round[1.1] == 1
-Round[1.6] == 2
+Round[1.1] == 1;
+Round[1.6] == 2;
 
 Max[27,8] == 27;
 Min[27,8] == 8;
 
-Conjugate[5+ 7 I]==5 - 7 I
+Conjugate[5+ 7 I]==5 - 7 I;
 
-KroneckerDelta[12,18]
-KroneckerDelta[a,a]
-Table[1,{3}]=={1, 1,1}
-Table[i^2,{i,1,10}]=={1, 4, 9, 16, 25, 36, 49, 64, 81, 100}
+KroneckerDelta[12,18];
+KroneckerDelta[a,a];
+Table[1,{3}]=={1, 1,1};
+Table[i^2,{i,1,10}]=={1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
 Table[i^2,{i,10}]=={1, 4, 9, 16, 25, 36, 49, 64, 81, 100}
 Table[f[i], {i, 1, 3}]=={f[1],f[2],f[3]}
-Module[{i=0},Table[i++,{10}]]=={1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+Module[{i=0},Table[i++,{10}]]=={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 Table[10*i + j, {i, 4},{j,3}]==Out[2]:= {{11, 12, 13}, {21, 22, 23}, {31, 32, 33}, {41, 42, 43}}
 Table[100* i + 10* j + k, {i, 3}, {j, 2}, {k, 4}]=
 {{111, 112, 113, 114}, {121, 122, 123, 124}}, {{211, 212, 213, 214}, {221, 222, 223, 224}}, {{311, 312, 313, 314}, {321, 322, 323, 324}}}
