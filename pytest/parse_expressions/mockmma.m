@@ -39,16 +39,16 @@ Cos[Pi/2]; (* != 0 due to appproximate numbers *)
 ArcSin[1]==Pi /2;
 
 (* Comparisons *)
-1>2 == False;
-2<1 == False;
-2>2 == False;
-1<2 == True;
-2<=1 == False;
-1>=2 == False;
-2>=2 == True;
-2<=2 == True;
-2==2 == True;
-2!=2 == False;
+(1>2) == False;
+(2<1) == False;
+(2>2) == False;
+(1<2) == True;
+(2<=1) == False;
+(1>=2) == False;
+(2>=2) == True;
+(2<=2) == True;
+(2==2) == True;
+(2!=2) == False;
 
 (* Logical operators
 True && True;
