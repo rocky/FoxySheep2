@@ -112,7 +112,7 @@ def REPL(
     in_count = 1
     while True:
         try:
-            user_in = input(f"In[{in_count}] := ")
+            user_in = input(f"In[{in_count}]:= ")
         except (KeyboardInterrupt, EOFError):
             break
         else:
