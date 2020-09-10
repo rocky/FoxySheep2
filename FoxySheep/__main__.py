@@ -63,7 +63,9 @@ def eval_one(
     debug=False,
 ) -> None:
     try:
-        results = output_style_fn(in_str, parse_tree_fn, show_tree_fn, mode, debug)
+        results = output_style_fn(in_str, parse_tree_fn, mode=mode,
+                                  show_tree_fn=show_tree_fn,
+                                  debug=debug)
     except:
         traceback.print_exc(5)
         return
