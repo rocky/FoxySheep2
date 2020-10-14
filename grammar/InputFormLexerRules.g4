@@ -396,6 +396,7 @@ fragment SpaceCharacter
 	|	'\u205f' //MediumSpace
 	|	'\u2005' //ThickSpace
 	|	'\uf380' //NegativeVeryThinSpace
+	|	'\uf3a3' //IndentingNewLine
 	|	[\uf382-\uf384] //NegativeThinSpace, NegativeMediumSpace, NegativeThickSpace
 	|	'\u2423' //SpaceIndicator
 	;
