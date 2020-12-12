@@ -21,7 +21,7 @@ IF_name_to_pyop = {
     "PlusOpContext": ast.Add,
 }
 
-# left: Mathematica, right: Python, comment: FullForm function
+# left: WL, right: Python, comment: FullForm function
 IF_op_to_pyop = {
     "==": ast.Eq,  # Equal
     "!=": ast.NotEq, # Unequal
@@ -32,8 +32,9 @@ IF_op_to_pyop = {
 }
 
 # FIXME: DRY this
-# left: Mathematica, right: Python
+# left: WL, right: Python
 fn_translate_py = {
+    "Abs": "abs",
     "Ceiling": "math.ceil",
     "Cosh": "math.cosh",
     "Exp": "math.exp",
@@ -60,7 +61,7 @@ for arc, tri, h in product(
         fs = tri.lower() + h
     fn_translate_py.update({fm: "math." + fs})
 
-# left: Mathematica, right: numpy
+# left: WL, right: numpy
 fn_translate_numpy = {
     **fn_translate_py,
     **{
@@ -83,7 +84,7 @@ fn_translate_numpy = {
     }
 }
 
-# left: Mathematica, right: scipy
+# left: WL, right: scipy
 fn_translate_scipy = {
     **fn_translate_py,
     **{
@@ -102,7 +103,7 @@ for arc, tri, h in product(
         fs = tri.lower() + h
     fn_translate_numpy.update({fm: "numpy." + fs})
 
-# left: Mathematica, right: Sympy
+# left: WL, right: Sympy
 fn_translate_sympy = {
     **fn_translate_py,
     **{
@@ -134,7 +135,7 @@ for arc, tri, h in product(
 
 fn_transform = {}
 
-# left: Mathematica, right: Python
+# left: WL, right: Python
 symbol_translate = {
     "E": "math.e",
     "Pi": "math.pi",
@@ -142,7 +143,7 @@ symbol_translate = {
 }
 
 
-# left: Mathematica, right: Python
+# left: WL, right: Python
 add_sub_signum = [ast.Add, ast.Sub]
 
 
@@ -177,7 +178,7 @@ class InputForm2PyAst(InputFormVisitor):
             raise RuntimeError(f"mode should be python, numpy, scipy or sympy; got {mode}")
 
     def adjust_index(self, ctx, sig_num=0) -> ast.AST:
-        """Adjust for origin 0 (Python) vs. origin 1 (Mathematica) indexing"""
+        """Adjust for origin 0 (Python) vs. origin 1 (WL) indexing"""
         numeric_literal = self.get_numeric_literal(ctx)
         if numeric_literal:
             return self.adjust_ast_const(numeric_literal, sig_num)
@@ -194,7 +195,7 @@ class InputForm2PyAst(InputFormVisitor):
         return node
 
     def adjust_ast_const(self, numeric_literal, sig_num=0) -> ast.AST:
-        """Adjust for origin 0 (Python) vs. origin 1 (Mathematica) indexing"""
+        """Adjust for origin 0 (Python) vs. origin 1 (WL) indexing"""
         if sig_num:
             numeric_literal.value += 1
         else:
